@@ -8,9 +8,9 @@ vocab = get_encoding('gpt2') # токенайзер gpt2, vocab_size ~50k
 
 ckpt_path = save_path
 
-steps = [2000, 4000, 6000, 8000, 10000] # какие чекпоинты проверять
-prompt = "What if"
-gen_tokens = 150
+steps = [12000, 14000, 16000, 18000, 20000] # какие чекпоинты проверять
+prompt = "Once upon a time"
+gen_tokens = 200
 
 @torch.no_grad()
 def generate(model, idx, max_new_tokens, max_seq_len=128):
@@ -19,7 +19,7 @@ def generate(model, idx, max_new_tokens, max_seq_len=128):
         idx_cond = idx[:, -max_seq_len:]
         logits = model(idx_cond)
         logits = logits[:, -1, :]
-        probs = torch.softmax(logits / 1.0, dim=-1)
+        probs = torch.softmax(logits / 0.8, dim=-1)
         next_tok = torch.multinomial(probs, num_samples=1)
         idx = torch.cat([idx, next_tok], dim=1)
     return idx

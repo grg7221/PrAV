@@ -6,7 +6,7 @@ from _global_params import batch_size, lenght, d_model, n_layers, heads, train_i
 
 # Вынесем всё на VRAM для максимальной скорости (размер датасета и весов относительно мал)
 device = torch.device('cuda')
-# Загружаем предзагатовленный тензор датасета
+# Загружаем предзаготовленный тензор датасета
 ds =  torch.load('E:/dataset/tensoried/ds_tokens.pt', device)
 ds = ds.long()
 ds_len = len(ds)
@@ -46,7 +46,7 @@ class Trainer():
         self.scaler.step(self.optimizer) # Применение градиентов
         self.scaler.update()
         
-        time.sleep(0.02)
+        time.sleep(0.05)
 
         return loss.item()
 
@@ -63,7 +63,7 @@ class Trainer():
                     "optimizer": self.optimizer.state_dict(),
                     "scaler": self.scaler.state_dict(),
                     "step": i
-                }, save_path.format(step=i))
+                }, save_path.format(step=i+starting_step))
 
                 print(f"Сохранено: {save_path.format(step=i+starting_step)}")
 
@@ -74,7 +74,7 @@ opt = torch.optim.AdamW(m.parameters(), lr=1e-4) # образец оптимиз
 scaler = torch.amp.GradScaler() # FP16
 
 if mode == 1:
-    checkpoint = torch.load("E:/checkpoints/model_step_8000.pt")
+    checkpoint = torch.load("E:/checkpoints/model_step_10000.pt")
     m.load_state_dict(checkpoint['model'])
 
     missing, unexpected = m.load_state_dict(checkpoint['model'], strict=False)
